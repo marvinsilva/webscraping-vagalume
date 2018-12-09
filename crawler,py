@@ -23,7 +23,7 @@ class WebScrap:
             print(f'Buscando por: {artista} ...')
             return True
 
-    def search(self, artista, quant = 15, musica = '', todas = False):
+    def search(self, artista):
         url = f'https://www.vagalume.com.br/{artista}/'
         print(url)
         html_doc = urlopen(url).read()
