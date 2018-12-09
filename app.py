@@ -1,8 +1,15 @@
 import getopt
 import sys
+import re
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+from unicodedata import normalize
+
+def remover_acentos_char_especiais(txt):
+    rm_acentos = normalize('NFKD', txt).encode('ASCII', 'ignore').decode('ASCII')
+    rm_char_especiais = re.sub('[^A-Za-z0-9 ]+', '', rm_acentos)
+    return rm_char_especiais.replace(" ", "-").lower()
 
 def main():
     artista = ''
@@ -22,7 +29,7 @@ def main():
 
         if opt in ("-a", "--artista"):
             print(f' artista {arg}')
-            artista = arg
+            artista = remover_acentos_char_especiais(arg)
 
         elif opt in ("-n", "--numero"):
             quant = int(arg)
