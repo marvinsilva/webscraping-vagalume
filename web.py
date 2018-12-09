@@ -17,7 +17,7 @@ class TopMusic(Resource):
         for seq, top in enumerate(top_musicas):
             if seq < 15:
                 lim_top_musicas.append(top)
-        return {'Top 15': lim_top_musicas}
+        return {'Top 15': 'Teste'}
 
 
 api.add_resource(TopMusic, '/top/<string:artista>') # http://127:0.0.1:5000/top/metallica
