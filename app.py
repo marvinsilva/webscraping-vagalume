@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-"""	Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e 
-    servir os dados recuperados através de uma API Restful. 
+""" Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e
+    servir os dados recuperados através de uma API Restful.
     Autor: Marcus Vinicius Laurindo da Silva
     Date de criação: 09/12/2018
     Disponível em: https://github.com/marvinsilva/webscraping-vagalume
@@ -14,8 +14,8 @@ import re               # Operações de expressão regular
 import sys              # Parâmetros e funções específicos do sistema
 import getopt           # Analisador para opções de linha de comando
 
-from unicodedata import normalize           # Unicode Database. Retorna o formulário normal para o unistr da string Unicode
-from crawler import WebScrap                # Importa a classe WebScrap do arquivo crawler.py para instanciar web scrap vagalume
+from unicodedata import normalize   # Unicode Database. Retorna o formulário normal para o unistr da string Unicode
+from crawler import WebScrap        # Importa a classe WebScrap do arquivo crawler.py para instanciar web scrap vagalume
 
 __author__ = "[marvinsilva] Marcus Vinicius Laurindo da Silva"
 __license__ = "GNU General Public License v3.0"
@@ -49,10 +49,10 @@ mensagem_ajuda = f"\nuso: python {nome_arquivo} -a \"nome do artista ou banda\" 
 def remover_acentos_char_especiais(txt):
     """ Converte caracteres com acento e remove caracteres especiais
 	"""
-    # A forma normal KD (NFKD) aplicará a decomposição de compatibilidade, ou seja, 
+    # A forma normal KD (NFKD) aplicará a decomposição de compatibilidade, ou seja,
     # substituirá todos os caracteres de compatibilidade por seus equivalentes
     rm_acentos = normalize('NFKD', txt).encode('ASCII', 'ignore').decode('ASCII')
-    # Retorna a string obtida substituindo as ocorrências não sobrepostas mais à esquerda 
+    # Retorna a string obtida substituindo as ocorrências não sobrepostas mais à esquerda
     # do padrão na string pela replicação substituta.
     rm_char_especiais = re.sub('[^A-Za-z0-9 ]+', '', rm_acentos)
     # Ao retornar a variavel, substitui espaços ' ' por hífens '-' e converte a palavra
@@ -60,7 +60,7 @@ def remover_acentos_char_especiais(txt):
     return rm_char_especiais.replace(" ", "-").lower()
 
 def tratar_opcoes_comando():
-    """ Analisa as opções de linha de comando e a lista de parâmetros. 
+    """ Analisa as opções de linha de comando e a lista de parâmetros.
         args é a lista de argumentos a ser analisada, sem a referência principal ao programa em execução.
 	"""
 
@@ -74,7 +74,7 @@ def tratar_opcoes_comando():
         # Define os argumentos e se estes recebem ou não funções opcionais (opts), curtas e longas
         # getopt.getopt(args, shortopts, longopts=[])
         opts, args = getopt.getopt(sys.argv[1:], "a:n:m:l:tvh",
-                                   ["artista=", "numero=", "musica=", "todas", "help"])
+                                   ["artista=", "numero=", "musica=", "todas", "version", "help"])
     except getopt.GetoptError as err:
         # Imprime informação de ajuda e sai:
         print(err)  # Imprime algo como: "option -x not recognized"
@@ -83,28 +83,34 @@ def tratar_opcoes_comando():
     for opt, arg in opts:
 
         if opt in ("-a", "--artista"):                      # Recebe em 'arg' o nome do artista
-            artista = remover_acentos_char_especiais(arg)   # Tratao argumento na função 'remover_acentos_char_especiais'
-            if not vagalume.request(artista):               # Verifica se a URL do artista é valida no site do vagalume.com.br
+            artista = remover_acentos_char_especiais(arg)   # Trata o arg na função 'remover_acentos_char_especiais'
+            if not vagalume.request(artista):               # Verifica se a URL do artista é valida no site do vagalume
                 sys.exit()                                  # e caso não seja o programa termina
 
-        elif opt in ("-n", "--numero") and artista:         # Se artista validado, recebe em 'arg' 
+        elif opt in ("-n", "--numero") and artista:         # Se artista validado, recebe em 'arg'
             quant = int(arg)                                # o número de musicas top a listar
             # Caso esse número seja maior que 25, uma mensagem de erro é exibida e o programa termina
-            if quant > 25:                                  
+            if quant > 25:
                 print("\nAtenção! O número máximo de músicas TOP é de 25")
                 sys.exit()
 
         elif opt in ("-m", "--musica") and artista:         # Se artista validado, recebe em 'arg'
             musica = arg.upper()                            # a letra inicial da musica que deseja buscar
 
-        elif opt in ("-t", "--todas") and artista:          # Se artista validado, recebe em 'arg' o parâmetro para listar 
-            todas = True                                    # todas as musicas disponíveis do artista
+        elif opt in ("-t", "--todas") and artista:          # Se artista validado, recebe em 'arg' o parâmetro para
+            todas = True                                    # listar todas as musicas disponíveis do artista
 
         elif opt in ("-h", "--help"):                       # Imprime a mensagem de ajuda sobre o programa é encerrado
             print(mensagem_ajuda)
             sys.exit()
 
-        # Caso o artista não tenha sido passado como argumento, uma 
+        elif opt in ("-v", "--version"):                    # Imprime a versão e demais info sobre o programa
+            print(f'Versão: {__version__}\
+            \nAutor: {__author__}\ne-mail: {__email__}\
+            \nLicença: {__license__}\nStatus: {__status__}')
+            sys.exit()
+
+        # Caso o artista não tenha sido passado como argumento, uma
         # mensagem de erro é exibida e o programa é encerrado
         elif opt not in ("-a", "--artista") and opt not in ("-h", "--help"):
             print(f'\nErro: artista ou banda não reconhecido! {mensagem_ajuda}')
@@ -117,7 +123,7 @@ def tratar_opcoes_comando():
 
 def imprimir_resultado_converter_json(artista, quant, musica, todas):
     """ Função com o objetivo de analisar as opções selecionadas em linha de comando,
-        percorrer a lista de músicas correspondente (top ou todas), imprimindo o resultado, 
+        percorrer a lista de músicas correspondente (top ou todas), imprimindo o resultado,
         e converter a lista em formato JSON
 	"""
     # Executa a função 'search' na instancia 'vagalume' e recebe como
