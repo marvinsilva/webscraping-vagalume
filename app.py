@@ -105,9 +105,11 @@ def tratar_opcoes_comando():
             sys.exit()
 
         elif opt in ("-v", "--version"):                    # Imprime a versão e demais info sobre o programa
-            print(f'Versão: {__version__}\
-            \nAutor: {__author__}\ne-mail: {__email__}\
-            \nLicença: {__license__}\nStatus: {__status__}')
+            print(f'Versão: {__version__}')
+            print(f'Autor: {__author__')
+            print(f'E-mail: {__email__}')
+            print(f'Licença: {__license__}')
+            print(f'Status: {__status__}')
             sys.exit()
 
         # Caso o artista não tenha sido passado como argumento, uma
