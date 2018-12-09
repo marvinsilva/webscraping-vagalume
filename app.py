@@ -42,26 +42,29 @@ def tratar_opcoes_comando():
 
     for opt, arg in opts:
 
-        if opt not in ("-a", "--artista") and opt not in ("-h", "--help"):
-            print(f'\nErro: artista ou banda não reconhecido! {mensagem_ajuda}')
-            sys.exit()
-
-        elif opt in ("-a", "--artista"):
+        if opt in ("-a", "--artista"):
             artista = remover_acentos_char_especiais(arg)
             if not vagalume.request(artista):
                 sys.exit()
 
-        elif opt in ("-n", "--numero"):
+        elif opt in ("-n", "--numero") and artista:
             quant = int(arg)
+            if quant > 25:
+                print("\nAtenção! O número máximo de músicas TOP é de 25")
+                sys.exit()
 
-        elif opt in ("-m", "--musica"):
+        elif opt in ("-m", "--musica") and artista:
             musica = arg.upper()
 
-        elif opt in ("-t", "--todas"):
+        elif opt in ("-t", "--todas") and artista:
             todas = True
 
         elif opt in ("-h", "--help"):
             print(mensagem_ajuda)
+            sys.exit()
+
+        elif opt not in ("-a", "--artista") and opt not in ("-h", "--help"):
+            print(f'\nErro: artista ou banda não reconhecido! {mensagem_ajuda}')
             sys.exit()
 
         else:
@@ -92,7 +95,7 @@ def imprimir_resultado_converter_json(artista, quant, musica, todas):
                 print(mus)
                 formato_json.append({'musica': mus})
 
-    print(formato_json)
+    print(f'\n{formato_json}')
     return formato_json
 
 def main():
