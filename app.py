@@ -1,11 +1,11 @@
+import os
+import re
 import getopt
 import sys
-import re
-import os
-from bs4 import BeautifulSoup
-from urllib.request import Request, urlopen
-from urllib.error import URLError, HTTPError
+from crawler import WebScrap
 from unicodedata import normalize
+
+vagalume = WebScrap()
 
 nome_arquivo = os.path.basename(__file__)
 
@@ -26,28 +26,9 @@ def remover_acentos_char_especiais(txt):
     rm_char_especiais = re.sub('[^A-Za-z0-9 ]+', '', rm_acentos)
     return rm_char_especiais.replace(" ", "-").lower()
 
-def request(artista):
-    url = f'https://www.vagalume.com.br/{artista}/'
-    req = Request(url)
-    try:
-        response = urlopen(req)
-    except HTTPError as e:
-        print('Código do erro: ', e.code)
-        print(f'Não foi possível atender à solicitação para URL {url}')
-        print(f'Favor verificar se o nome do artista ou banda está correto: {artista}')
-        return False
-    except URLError as e:
-        print('Não conseguimos chegar a um servidor.')
-        print('Motivo: ', e.reason)
-        return False
-    else:
-        print("Solicitação requerida com sucesso!")
-        print(f'Buscando por: {artista} ...')
-        return True
-
-def main():
-    artista = ''
-    musica = ''
+def tratar_opcoes_comando():
+    artista = str()
+    musica = str()
     quant = 15
     todas = False
 
@@ -62,12 +43,12 @@ def main():
     for opt, arg in opts:
 
         if opt not in ("-a", "--artista") and opt not in ("-h", "--help"):
-            print(f'\nErro: artista ou banda não reconhecido!')
+            print(f'\nErro: artista ou banda não reconhecido! {mensagem_ajuda}')
             sys.exit()
 
         elif opt in ("-a", "--artista"):
             artista = remover_acentos_char_especiais(arg)
-            if not request(artista):
+            if not vagalume.request(artista):
                 sys.exit()
 
         elif opt in ("-n", "--numero"):
@@ -83,22 +64,40 @@ def main():
             print(mensagem_ajuda)
             sys.exit()
 
-    url = f'https://www.vagalume.com.br/{artista}/'
-    print(url)
-    html_doc = urlopen(url).read()
-    soup = BeautifulSoup(html_doc, "html.parser")
-    top_musicas = []
-    alfabet_musicas = []
+        else:
+            assert False, "Opção não tratada"
 
-    for top in soup.find(id="topMusicList").find_all("a", class_="nameMusic"):
-        top_musicas.append(top.get_text())
+    return artista, quant, musica, todas
 
-    for top in soup.find(id="alfabetMusicList").find_all("a", class_="nameMusic"):
-        alfabet_musicas.append(top.get_text())
+def imprimir_resultado_converter_json(artista, quant, musica, todas):
 
-    print(f'top: {top_musicas}')
-    print(f'alfabetic {alfabet_musicas}')
+    top_musicas, alfabet_musicas = vagalume.search(artista, quant, musica, todas)
+    musica_por_letra = []
+    formato_json = []
 
+    if not musica and not todas:    # lista das top musicas do artista
+        for seq, top in enumerate(top_musicas):
+            if seq < quant:
+                print(seq + 1, top)
+                formato_json.append({seq + 1: top})
+    else:
+        if musica:  # lista musicas de acordo com a primeira letra correspondente
+            for mus in alfabet_musicas:
+                if mus.startswith(musica):
+                    musica_por_letra.append(mus)
+                    print(mus)
+                    formato_json.append({musica: mus})
+        else:
+            for mus in alfabet_musicas:   # lista todas as musicas do artista
+                print(mus)
+                formato_json.append({'musica': mus})
+
+    print(formato_json)
+    return formato_json
+
+def main():
+    artista, quant, musica, todas = tratar_opcoes_comando()
+    formato_json = imprimir_resultado_converter_json(artista, quant, musica, todas)
 
 if __name__ == "__main__":
     main()
