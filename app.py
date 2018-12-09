@@ -77,7 +77,7 @@ def tratar_opcoes_comando():
 
 def imprimir_resultado_converter_json(artista, quant, musica, todas):
 
-    top_musicas, alfabet_musicas = vagalume.search(artista, quant, musica, todas)
+    top_musicas, alfabet_musicas = vagalume.search(artista)
     musica_por_letra = []
     formato_json = []
 
