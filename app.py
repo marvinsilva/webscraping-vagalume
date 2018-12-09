@@ -15,24 +15,20 @@ def main():
         sys.exit(2)
 
     for opt, arg in opts:
-
-        if opt in ("-a"):
+        if opt in ("-a", "--artista"):
             print(f' artista {arg}')
             artista = arg
 
-        elif opt in ("-n"):
-            print(f' quantidade {arg}')
+        elif opt in ("-n", "--numero"):
             quant = int(arg)
 
-        elif opt in ("-m"):
-            print(f' musica {arg}')
+        elif opt in ("-m", "--musica"):
             musica = arg.upper()
 
-        elif opt in ("-t"):
-            print(f' todas {arg}')
+        elif opt in ("-t", "--todas"):
             todas = True
 
-        elif opt in ("-h"):
+        elif opt in ("-h", "--help"):
             print("Help")
             sys.exit()
 
