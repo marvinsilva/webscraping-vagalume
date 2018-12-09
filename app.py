@@ -11,6 +11,25 @@ def remover_acentos_char_especiais(txt):
     rm_char_especiais = re.sub('[^A-Za-z0-9 ]+', '', rm_acentos)
     return rm_char_especiais.replace(" ", "-").lower()
 
+def request(artista):
+    url = f'https://www.vagalume.com.br/{artista}/'
+    req = Request(url)
+    try:
+        response = urlopen(req)
+    except HTTPError as e:
+        print('Código do erro: ', e.code)
+        print(f'Não foi possível atender à solicitação para URL {url}')
+        print(f'Favor verificar se o nome do artista ou banda está correto: {artista}')
+        return False
+    except URLError as e:
+        print('Não conseguimos chegar a um servidor.')
+        print('Motivo: ', e.reason)
+        return False
+    else:
+        print("Solicitação requerida com sucesso!")
+        print(f'Buscando por: {artista} ...')
+        return True
+
 def main():
     artista = ''
     musica = ''
@@ -27,9 +46,14 @@ def main():
 
     for opt, arg in opts:
 
-        if opt in ("-a", "--artista"):
-            print(f' artista {arg}')
+        if opt not in ("-a", "--artista"):
+            print(f'\nErro: artista ou banda não reconhecido!')
+            sys.exit()
+
+        elif opt in ("-a", "--artista"):
             artista = remover_acentos_char_especiais(arg)
+            if not request(artista):
+                sys.exit()
 
         elif opt in ("-n", "--numero"):
             quant = int(arg)
