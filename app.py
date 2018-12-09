@@ -19,7 +19,10 @@ mensagem_ajuda = f"\nuso: python {nome_arquivo} -a \"nome do artista ou banda\" 
                     \n-l   :   musica especifica para pesquisa da respectiva letra\
                     \n-t   :   todas as musicas do artista\
                     \n-v   :   imprime a versao do software\
-                    \n-h   :   imprime a mensagem de ajuda deste programa\n"
+                    \n-h   :   imprime a mensagem de ajuda deste programa\
+                    \nNota :   \
+                    \n- O numero maximo de musicas TOP e de 25 musicas\
+                    \n- O nome do artista ou banda nao e opcional"
 
 def remover_acentos_char_especiais(txt):
     rm_acentos = normalize('NFKD', txt).encode('ASCII', 'ignore').decode('ASCII')
