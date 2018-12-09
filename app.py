@@ -1,10 +1,25 @@
 import getopt
 import sys
 import re
+import os
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 from unicodedata import normalize
+
+nome_arquivo = os.path.basename(__file__)
+
+mensagem_ajuda = f"\nuso: python {nome_arquivo} -a \"nome do artista ou banda\" [opcoes] ... \
+                    \n[-a --artista | -n --numero | -m --musica | -l --letra " \
+                    f"| -t --todas | -v --versao | -h --help]\
+                    \nopcoes e argumentos:\
+                    \n-a   :   nome do artista ou banda para pesquisa\
+                    \n-n   :   numero especifico de musicas do TOP de um artista\
+                    \n-m   :   musicas de um artista baseado na primeira letra do titulo\
+                    \n-l   :   musica especifica para pesquisa da respectiva letra\
+                    \n-t   :   todas as musicas do artista\
+                    \n-v   :   imprime a versao do software\
+                    \n-h   :   imprime a mensagem de ajuda deste programa\n"
 
 def remover_acentos_char_especiais(txt):
     rm_acentos = normalize('NFKD', txt).encode('ASCII', 'ignore').decode('ASCII')
@@ -46,7 +61,7 @@ def main():
 
     for opt, arg in opts:
 
-        if opt not in ("-a", "--artista"):
+        if opt not in ("-a", "--artista") and opt not in ("-h", "--help"):
             print(f'\nErro: artista ou banda não reconhecido!')
             sys.exit()
 
@@ -65,7 +80,7 @@ def main():
             todas = True
 
         elif opt in ("-h", "--help"):
-            print("Help")
+            print(mensagem_ajuda)
             sys.exit()
 
     url = f'https://www.vagalume.com.br/{artista}/'
