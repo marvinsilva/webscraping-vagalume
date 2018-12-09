@@ -1,0 +1,9 @@
+from bs4 import BeautifulSoup
+
+class WebScrap:
+
+    def request(self):
+        pass
+
+    def search(self):
+        pass
