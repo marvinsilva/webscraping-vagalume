@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e
+"""	Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e
     servir os dados recuperados em ENDPOINTS através de uma API Restful.
     Autor: Marcus Vinicius Laurindo da Silva
     Date de criação: 10/12/2018
@@ -69,9 +69,8 @@ class TopMusic(Resource):
         top_musicas, alfabet_musicas = vagalume.search(artista)
 
         lim_top_musicas = []
-        for seq, top in enumerate(top_musicas):     # lista das top 15 musicas do artista
-            if seq < 15:
-                lim_top_musicas.append(top)
+        # lista das top 15 musicas do artista
+        [lim_top_musicas.append(top) for seq, top in enumerate(top_musicas) if seq < 15]
         
         return {'Top 15': lim_top_musicas}
 
@@ -91,9 +90,8 @@ class TopMusicQuant(Resource):
         top_musicas, alfabet_musicas = vagalume.search(artista)
 
         lim_top_musicas = []
-        for seq, top in enumerate(top_musicas):     # lista das top musicas do artista
-            if seq < quant:
-                lim_top_musicas.append(top)
+        # lista das top musicas do artista
+        [lim_top_musicas.append(top) for seq, top in enumerate(top_musicas) if seq < quant]
         
         return {f'Top {quant}': lim_top_musicas}
 
@@ -124,10 +122,8 @@ class MusicaPorLetra(Resource):
         top_musicas, alfabet_musicas = vagalume.search(artista)
         
         musica_por_letra = []
-        
-        for mus in alfabet_musicas:     # lista de musicas de acordo com a primeira letra correspondente
-            if mus.startswith(letra_inicial.upper()):
-                musica_por_letra.append(mus)
+        # lista de musicas de acordo com a primeira letra correspondente
+        [musica_por_letra.append(mus) for mus in alfabet_musicas if mus.startswith(letra_inicial.upper())]
 
         return {f'Musicas com a letra {letra_inicial}': musica_por_letra}
 
@@ -176,6 +172,6 @@ if __name__ == "__main__":
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
 
+    # app.run(host='127.0.0.1', port=port)
     # Para executar corretamente no Heroku, o host deve ser: '0.0.0.0' (https://vagalume-web-scrap.herokuapp.com/)
-    #app.run(host='127.0.0.1', port=port)
     app.run(host='0.0.0.0', port=port)
