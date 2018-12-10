@@ -122,6 +122,21 @@ class MusicaPorLetra(Resource):
 
         return {f'Musicas com a letra {letra_inicial}': musica_por_letra}
 
+class LetraMusic(Resource):
+    """ Recurso retorna a letra de uma música específica
+	"""
+    def get(self, artista,lyric):     # metodo GET para obter informações sobre o recurso (Resource)
+        artista = remover_acentos_char_especiais(artista)       # Trata as requisições recebidas (artista e letra da musica)
+        lyric = remover_acentos_char_especiais(lyric)           # na função 'remover_acentos_char_especiais'
+        if not vagalume.request(artista, lyric):                # Verifica se a URL do artista e letra são validas no site do vagalume
+            sys.exit(2)                                         # e caso não seja uma mensagem de erro é exibida no console
+        
+        # Executa a função 'letra' na instancia 'vagalume' e recebe como
+        # resultado a letra da musica especificada daquele artista
+        letra = vagalume.letra(artista, lyric)
+        
+        return {f'Letra da musica {lyric}': letra}
+
 if __name__ == "__main__":
 
     # Criando e adicionando os recursos e Endpoints a API
