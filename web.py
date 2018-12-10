@@ -102,6 +102,26 @@ class AlfabetMusic(Resource):
         
         return {f'Todas as musicas de {artista}': alfabet_musicas}
 
+class MusicaPorLetra(Resource):
+    """ Recurso para listar as músicas de um artista baseado na primeira letra do título da música
+	"""
+    def get(self, artista, letra_inicial):     # metodo GET para obter informações sobre o recurso (Resource)
+        artista = remover_acentos_char_especiais(artista)       # Trata a requisição recebida na função 'remover_acentos_char_especiais'
+        if not vagalume.request(artista, ''):                   # Verifica se a URL do artista é valida no site do vagalume
+            sys.exit(2)                                         # e caso não seja uma mensagem de erro é exibida no console
+
+        # Executa a função 'search' na instancia 'vagalume' e recebe como
+        # resultado as duas listas (top e todas) daquele artista
+        top_musicas, alfabet_musicas = vagalume.search(artista)
+        
+        musica_por_letra = []
+        
+        for mus in alfabet_musicas:     # lista de musicas de acordo com a primeira letra correspondente
+            if mus.startswith(letra_inicial.upper()):
+                musica_por_letra.append(mus)
+
+        return {f'Musicas com a letra {letra_inicial}': musica_por_letra}
+
 if __name__ == "__main__":
 
     # Criando e adicionando os recursos e Endpoints a API
@@ -109,6 +129,7 @@ if __name__ == "__main__":
     api.add_resource(AlfabetMusic, '/todas/<string:artista>')                            # http://127:0.0.1:5000/todas/metallica
     api.add_resource(TopMusic, '/top/<string:artista>')                                  # http://127:0.0.1:5000/top/metallica
     api.add_resource(TopMusicQuant, '/top/<string:artista>/<int:quant>')                 # http://127:0.0.1:5000/top/metallica/10
+    api.add_resource(MusicaPorLetra, '/top/<string:artista>/<string:letra_inicial>')     # http://127:0.0.1:5000/top/metallica/a
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
 
