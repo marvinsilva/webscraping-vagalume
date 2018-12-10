@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""	Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e
+""" Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e
     servir os dados recuperados em ENDPOINTS através de uma API Restful.
     Autor: Marcus Vinicius Laurindo da Silva
     Date de criação: 10/12/2018
@@ -33,6 +33,15 @@ api = Api(app)
 vagalume = WebScrap()
 # Variável com o nome e extensão deste arquivo
 nome_arquivo = os.path.basename(__file__)
+
+# Mensagem de ajuda contendo informações de utilização deste software
+mensagem_ajuda = f"Endpoints:", \
+                 "Outra mensagem"
+
+# Mensagem contendo versão e demais informações sobre este software
+mensagem_versao = f"Versao: {__version__}", f"Autor: {__author__}", \
+                  f"E-mail: {__email__}", f"Licenca: {__license__}", \
+                  f"Status: {__status__}"
 
 def remover_acentos_char_especiais(txt):
     """ Converte caracteres com acento e remove caracteres especiais
@@ -137,6 +146,20 @@ class LetraMusic(Resource):
         
         return {f'Letra da musica {lyric}': letra}
 
+class Ajuda(Resource):
+    """ Recurso exibe uma mensagem de ajuda sobre o programa
+	"""
+    def get(self):     # metodo GET para obter informações sobre o recurso (Resource)
+        
+        return {'Mensagem de ajuda: ': mensagem_ajuda}
+
+class Versao(Resource):
+    """ Recurso exibe a versao do software e demais informações
+	"""
+    def get(self):     # metodo GET para obter informações sobre o recurso (Resource)
+        
+        return {'Versao de Software: ': mensagem_versao}
+
 if __name__ == "__main__":
 
     # Criando e adicionando os recursos e Endpoints a API
@@ -145,6 +168,11 @@ if __name__ == "__main__":
     api.add_resource(TopMusic, '/top/<string:artista>')                                  # http://127:0.0.1:5000/top/metallica
     api.add_resource(TopMusicQuant, '/top/<string:artista>/<int:quant>')                 # http://127:0.0.1:5000/top/metallica/10
     api.add_resource(MusicaPorLetra, '/top/<string:artista>/<string:letra_inicial>')     # http://127:0.0.1:5000/top/metallica/a
+    api.add_resource(LetraMusic, '/letra/<string:artista>/<string:lyric>')               # http://127:0.0.1:5000/letra/metallica/nothing-else-matters
+    api.add_resource(Ajuda, '/help')                                                     # http://127:0.0.1:5000/help
+    api.add_resource(Versao, '/version')                                                 # http://127:0.0.1:5000/version
+
+
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
 
