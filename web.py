@@ -66,6 +66,28 @@ class TopMusic(Resource):
         
         return {'Top 15': lim_top_musicas}
 
+class TopMusicQuant(Resource):
+    """ Recurso para listar as top musicas de um artista na quantidade requisitada
+	"""
+    def get(self, artista, quant):     # metodo GET para obter informações sobre o recurso (Resource)
+        artista = remover_acentos_char_especiais(artista)       # Trata a requisição recebida na função 'remover_acentos_char_especiais'
+        if not vagalume.request(artista, ''):                   # Verifica se a URL do artista é valida no site do vagalume
+            sys.exit(2)                                         # e caso não seja uma mensagem de erro é exibida no console
+
+        if quant > 25:      # Valida top musicas limite 25
+            return {'Erro': 'O numero maximo de musicas TOP e de 25'}
+
+        # Executa a função 'search' na instancia 'vagalume' e recebe como
+        # resultado as duas listas (top e todas) daquele artista
+        top_musicas, alfabet_musicas = vagalume.search(artista)
+
+        lim_top_musicas = []
+        for seq, top in enumerate(top_musicas):     # lista das top musicas do artista
+            if seq < quant:
+                lim_top_musicas.append(top)
+        
+        return {f'Top {quant}': lim_top_musicas}
+
 class AlfabetMusic(Resource):
     """ Recurso para listar todas as musicas de um artista
 	"""
@@ -86,6 +108,7 @@ if __name__ == "__main__":
     # Comentarios exemplicados com o artista 'metallica'
     api.add_resource(AlfabetMusic, '/todas/<string:artista>')                            # http://127:0.0.1:5000/todas/metallica
     api.add_resource(TopMusic, '/top/<string:artista>')                                  # http://127:0.0.1:5000/top/metallica
+    api.add_resource(TopMusicQuant, '/top/<string:artista>/<int:quant>')                 # http://127:0.0.1:5000/top/metallica/10
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
 
