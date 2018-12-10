@@ -6,11 +6,16 @@ class WebScrap:
     """ Classe com objetivo de encapsular o crawler da URL valagume.com.br
     """
 
-    def request(self, artista):
+    def request(self, artista, letra):
         """ Valida a requisição do artista ou banda na URL valagume.com.br
             de modo a verificar se o link realmente é valido
         """
-        url = f'https://www.vagalume.com.br/{artista}/'     # link de busca do artista ou banda
+        # Valida URL para artista ou artista e letra
+        if not letra:
+            url = f'https://www.vagalume.com.br/{artista}/'     # link de busca do artista ou banda
+        else:
+            url = f'https://www.vagalume.com.br/{artista}/{letra}.html'  # link de busca do artista ou banda
+
         req = Request(url)      # executa a requisição para o site
 
         try:
@@ -22,16 +27,25 @@ class WebScrap:
             # um HTTPError também pode funcionar como um valor de retorno semelhante a um arquivo não excepcional
             print('Código do erro: ', e.code)
             print(f'Não foi possível atender à solicitação para URL {url}')
-            print(f'Favor verificar se o nome do artista ou banda está correto: {artista}')
+            print(f'Favor verificar se o nome do artista ou letra estão corretos: {artista}, {letra}')
+
             return False
+
         except URLError as e:
             # É uma subclasse do OSError
             print('Não conseguimos chegar a um servidor.')
             print('Motivo: ', e.reason)
+
             return False
+            
         else:   # Caso a URL seja valida
-            print("Solicitação requerida com sucesso!")
-            print(f'Buscando por: {artista} ...')
+            if not letra: # Imprime confirmação de validação para artista e letra ou somente artista
+                print("Solicitação requerida com sucesso!")
+                print(f'Buscando por: {artista} ...')
+            else:
+                print("Solicitação requerida com sucesso!")
+                print(f'Buscando por: {artista}/{letra} ...')
+
             return True
 
     def search(self, artista):
@@ -39,7 +53,6 @@ class WebScrap:
             lista das musicas TOP e lista de todas as musicas do artista
             correspondente passado como argumento na função
         """
-
         url = f'https://www.vagalume.com.br/{artista}/'     # link de busca do artista ou banda
         print(f'URL: {url}')
         documento_html = urlopen(url).read()    # recebe documento HTML
@@ -55,9 +68,25 @@ class WebScrap:
         for top in soup.find(id="topMusicList").find_all("a", class_="nameMusic"):
             top_musicas.append(top.get_text())
 
-        # Para cada titulo de musica no centexto de todas as músicas
+        # Para cada titulo de musica no contexto de todas as músicas
         # do artista, acrescenta o item na lista de todas musicas
         for top in soup.find(id="alfabetMusicList").find_all("a", class_="nameMusic"):
             alfabet_musicas.append(top.get_text())
 
         return top_musicas, alfabet_musicas
+
+    def letra(self, artista, lyric):
+        """ Executa o web scrap no site do vagalume retornando a letra da musica
+            requisitada daquele artista
+        """
+        url = f'https://www.vagalume.com.br/{artista}/{lyric}.html'     # link de busca do artista ou banda
+        print(f'URL: {url}')
+        documento_html = urlopen(url).read()    # recebe documento HTML
+        # Criando uma instância da classe BeautifulSoup para analisar o documento_html
+        soup = BeautifulSoup(documento_html, "html.parser")
+        
+        # Web scraping do site vagalume no item 'lyrics' retorna 
+        # a letra da musica requisitada naquela URL
+        letra = soup.find(id="lyrics").get_text()
+
+        return letra
