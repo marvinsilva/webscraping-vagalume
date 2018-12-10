@@ -176,6 +176,6 @@ if __name__ == "__main__":
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
 
-    # Para executar corretamente no Heroku, o host deve ser: '0.0.0.0'
-    app.run(host='127.0.0.1', port=port)
-    #app.run(host='0.0.0.0', port=port)
+    # Para executar corretamente no Heroku, o host deve ser: '0.0.0.0' (https://vagalume-web-scrap.herokuapp.com/)
+    #app.run(host='127.0.0.1', port=port)
+    app.run(host='0.0.0.0', port=port)
