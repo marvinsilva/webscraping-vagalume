@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-"""	Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e
+""" Objetivo: Fazer um crawler que recupera dados do site ​www.vagalume.com​ em tempo de execução e
     servir os dados recuperados em ENDPOINTS através de uma API Restful.
     Autor: Marcus Vinicius Laurindo da Silva
-    Date de criação: 10/12/2018
+    Date de criação: 11/12/2018
     Disponível em: https://github.com/marvinsilva/webscraping-vagalume
     Python 3.7.1
 """
@@ -35,8 +35,11 @@ vagalume = WebScrap()
 nome_arquivo = os.path.basename(__file__)
 
 # Mensagem de ajuda contendo informações de utilização deste software
-mensagem_ajuda = f"Endpoints:", \
-                 "Outra mensagem"
+mensagem_ajuda = "A documentação do projeto pode ser verificada em: " \
+                 "https://github.com/marvinsilva/webscraping-vagalume/blob/master/README.md", \
+                  f"Versao: {__version__}", f"Autor: {__author__}", \
+                  f"E-mail: {__email__}", f"Licenca: {__license__}", \
+                  f"Status: {__status__}"
 
 # Mensagem contendo versão e demais informações sobre este software
 mensagem_versao = f"Versao: {__version__}", f"Autor: {__author__}", \
@@ -45,7 +48,7 @@ mensagem_versao = f"Versao: {__version__}", f"Autor: {__author__}", \
 
 def remover_acentos_char_especiais(txt):
     """ Converte caracteres com acento e remove caracteres especiais
-	"""
+    """
     # A forma normal KD (NFKD) aplicará a decomposição de compatibilidade, ou seja,
     # substituirá todos os caracteres de compatibilidade por seus equivalentes
     rm_acentos = normalize('NFKD', txt).encode('ASCII', 'ignore').decode('ASCII')
@@ -59,7 +62,7 @@ def remover_acentos_char_especiais(txt):
 
 class TopMusic(Resource):
     """ Recurso para listar as top 15 musicas de um artista
-	"""
+    """
     def get(self, artista):     # metodo GET para obter informações sobre o recurso (Resource)
         artista = remover_acentos_char_especiais(artista)       # Trata a requisição recebida na função 'remover_acentos_char_especiais'
         if not vagalume.request(artista, ''):                   # Verifica se a URL do artista é valida no site do vagalume
@@ -76,7 +79,7 @@ class TopMusic(Resource):
 
 class TopMusicQuant(Resource):
     """ Recurso para listar as top musicas de um artista na quantidade requisitada
-	"""
+    """
     def get(self, artista, quant):     # metodo GET para obter informações sobre o recurso (Resource)
         artista = remover_acentos_char_especiais(artista)       # Trata a requisição recebida na função 'remover_acentos_char_especiais'
         if not vagalume.request(artista, ''):                   # Verifica se a URL do artista é valida no site do vagalume
@@ -97,7 +100,7 @@ class TopMusicQuant(Resource):
 
 class AlfabetMusic(Resource):
     """ Recurso para listar todas as musicas de um artista
-	"""
+    """
     def get(self, artista):     # metodo GET para obter informações sobre o recurso (Resource)
         artista = remover_acentos_char_especiais(artista)       # Trata a requisição recebida na função 'remover_acentos_char_especiais'
         if not vagalume.request(artista, ''):                   # Verifica se a URL do artista é valida no site do vagalume
@@ -111,7 +114,7 @@ class AlfabetMusic(Resource):
 
 class MusicaPorLetra(Resource):
     """ Recurso para listar as músicas de um artista baseado na primeira letra do título da música
-	"""
+    """
     def get(self, artista, letra_inicial):     # metodo GET para obter informações sobre o recurso (Resource)
         artista = remover_acentos_char_especiais(artista)       # Trata a requisição recebida na função 'remover_acentos_char_especiais'
         if not vagalume.request(artista, ''):                   # Verifica se a URL do artista é valida no site do vagalume
@@ -129,7 +132,7 @@ class MusicaPorLetra(Resource):
 
 class LetraMusic(Resource):
     """ Recurso retorna a letra de uma música específica
-	"""
+    """
     def get(self, artista,lyric):     # metodo GET para obter informações sobre o recurso (Resource)
         artista = remover_acentos_char_especiais(artista)       # Trata as requisições recebidas (artista e letra da musica)
         lyric = remover_acentos_char_especiais(lyric)           # na função 'remover_acentos_char_especiais'
@@ -144,14 +147,14 @@ class LetraMusic(Resource):
 
 class Ajuda(Resource):
     """ Recurso exibe uma mensagem de ajuda sobre o programa
-	"""
+    """
     def get(self):     # metodo GET para obter informações sobre o recurso (Resource)
         
         return {'Mensagem de ajuda: ': mensagem_ajuda}
 
 class Versao(Resource):
     """ Recurso exibe a versao do software e demais informações
-	"""
+    """
     def get(self):     # metodo GET para obter informações sobre o recurso (Resource)
         
         return {'Versao de Software: ': mensagem_versao}
