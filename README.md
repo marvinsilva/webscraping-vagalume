@@ -1,15 +1,14 @@
-## webscraping-vagalume
 
-O projeto web-scraping-vagalume tem como principal objetivo executar um web scraping* no site vagalume.com.br recuperando os dados em tempo de execução
-e atender a requisição para as seguintes funcionalidades:
+## Web Scraping Vagalume
+---
+
+O projeto web-scraping-vagalume tem como principal objetivo executar um web scraping no site vagalume.com.br recuperando os dados em tempo de execução e atender a requisição para as seguintes funcionalidades:
 
 1. Retornar as 15 primeiras músicas do TOP de um artista;
 2. Retornar um número específico de músicas do TOP de um artista (sendo no máximo 25);
 3. Retornar as músicas de um artista baseado na primeira letra do título da música;
 4. Retornar todas as músicas do artista;
 5. Retornar a letra de uma música específica. 
-
-*Web Scraping é uma técnica de extração de dados utilizada para coletar dados de sites.*
 
 Para atender os objetivos do projeto, foram desenvolvidos três programas com modo de execução e diferentes tarefas.
 
@@ -22,7 +21,11 @@ Utiliza o analizador de argumentos de linha de comando para selecionar as requis
 ### web.py: 
 Utiliza a API Restful* com diferentes Endpoints para receber e tratar diferentes requisições, executar o programa crawler e disponibilizar o resultado nos mesmo Endpoints
 
-*API Restful:*
+*API: API é um conjunto de rotinas e padrões de programação para acesso a um aplicativo de software ou plataforma baseado na Web. A sigla API refere-se ao termo em inglês "Application Programming Interface" que significa em tradução para o português "Interface de Programação de Aplicativos".*
+
+*REST: A Representational State Transfer (REST), em português Transferência de Estado Representacional, é um estilo de arquitetura que define um conjunto de restrições e propriedades baseados em HTTP. Web Services que obedecem ao estilo arquitetural REST, ou web services RESTful, fornecem interoperabilidade entre sistemas de computadores na Internet.*
+
+*Web Scraping: técnica de extração de dados utilizada para coletar dados de sites.*
 
 ---
 A seguir, será descrito o modo de execuçaõ dos softwares 'app.py' e 'web.py':
