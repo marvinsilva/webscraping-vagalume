@@ -34,37 +34,37 @@ uso: python app.py -a "nome do artista ou banda" [opcoes] ...
 [-a --artista | -n --numero | -m --musica | -l --letra | -t --todas | -v --versao | -h --help]
 
 1. Retornar as 15 primeiras músicas do TOP de um artista
-```python
+```
 python app.py -a "metallica"
 python app.py --artista "metallica"
 ```
 2. Retornar um número específico de músicas do TOP de um artista (sendo no máximo 25)
-```python
+```
 python app.py -a "metallica" -n 10
 python app.py --artista "metallica" --numero 10
 ```
 3. Retornar as músicas de um artista baseado na primeira letra do título da música
-```python
+```
 python app.py -a "metallica" -m a
 python app.py --artista "metallica" --musica a
 ```
 4. Retornar todas as músicas do artista
-```python
+```
 python app.py -a "metallica" -t
 python app.py --artista "metallica" --todas
 ```
 5. Retornar a letra de uma música específica 
-```python
+```
 python app.py -a "metallica" -l "nothing else matters"
 python app.py --artista "metallica" --letra"nothing else matters"
 ```
 6. Retornar a versão e demais informações sobre o software
-```python
+```
 python app.py -v
 python app.py --version
 ```
 7. Retornar as informções de ajuda sobre o software
-```python
+```
 python app.py -h
 python app.py --help
 ```
